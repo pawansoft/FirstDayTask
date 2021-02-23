@@ -1,51 +1,53 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
-import {Portal, Provider, Modal} from 'react-native-paper'
+import { ScrollView, Text, View } from 'react-native';
+import {IconButton} from 'react-native-paper'
 import AdminDashboardStyles from '../style/AdminDashboardStyles';
-import Form from './Form';
+import GlobalStyleConstants from '../style/GlobalStyleConstant';
+import StudentList from './StudentList';
 import Topbar from './Topbar';
 
 class AdminDashboard extends Component{
     constructor(props) {
         super(props)
         this.state = {
-            showForm : false
+            studentList: [['Radha', 'Krishna', '9999999999', 'radha@gmail.com'],
+                            ['Krishna', 'Prasad', '9999999999', 'radha@gmail.com'],
+                            ['Ram', 'Prasad', '9999999999', 'radha@gmail.com'],
+                            ['Sita', 'Sita', '9999999999', 'radha@gmail.com']]
         }
     }
-    
-    handleMenu = () => {
-        this.props.navigation.openDrawer()
+
+    addDataToStudentList = (studentDetails) => {
+        this.setState({
+            studentList : this.state.studentList.push(studentDetails)
+        })
+        
     }
 
-    handlePlus = () => {
-       this.setState({ showForm : true })
-    }
-
-    hideForm = () => {
-        this.setState({ showForm : false })
+    handlePlusButton = () => {
+        this.props.navigation.push('CreateList', {saveDetail : this.addDataToStudentList});
     }
 
     render(){
         return(
-            <Provider>
-                <View style = {AdminDashboardStyles.container}>
-                    <Topbar 
-                        showMenu = {true}
-                        onPressMenuButton = {this.handleMenu}
-                        showPlusButton = {true}
-                        onPressPlusButton = {this.handlePlus}
-                        heading = 'DASHBOARD'/>
-                    <Portal>
-                        <Modal 
-                            visible = {this.state.showForm}
-                            onDismiss = {this.hideForm}
-                            contentContainerStyle = {{width : '80%', backgroundColor : 'white', justifyContent : 'center', alignSelf : 'center', padding : 20}}>
-                            <Form onDismiss = {this.hideForm}/>
-                        </Modal>
-                    </Portal>
-                    
+            <View style = {AdminDashboardStyles.container}>
+                <Topbar 
+                    showMenu = {true}
+                    navigation = {this.props.navigation}
+                    showProfile = {true}
+                    heading = 'DASHBOARD'/>
+                <View style = {{flexDirection : 'row', justifyContent : 'space-between', marginTop : 10, alignItems : 'center'}}>
+                    <Text style = {{fontSize : 16, marginLeft : 10, fontWeight : 'bold'}}>
+                        List Page
+                    </Text>
+                    <IconButton icon = "plus" 
+                    style = {{marginRight : 10, backgroundColor : GlobalStyleConstants.PrimaryColor}} 
+                    color = 'white'
+                    onPress = {this.handlePlusButton}/>
                 </View>
-            </Provider>
+                    <StudentList studentList = {this.state.studentList}/>
+            </View>
+            
         )
     }
 }

@@ -1,21 +1,43 @@
 import React from 'react'
-import { Appbar } from 'react-native-paper'
+import { Appbar, Avatar } from 'react-native-paper'
+import GlobalStyleConstants from '../style/GlobalStyleConstant'
+import TopbarStyle from '../style/TopbarStyle'
 
 const Topbar = ({...props}) => {
+
+    const handleMenu = () => {
+        props.navigation.openDrawer()
+    }
+
+    const handleBackbutton = () => {
+        props.navigation.push('Drawer', {screen : 'Dashboard'})
+    }
+
     return (
-        <Appbar>
+        <Appbar style = {TopbarStyle.container}>
             {props.showMenu != undefined ?
                 <Appbar.Action 
                     icon = 'menu'
-                    onPress = {props.onPressMenuButton}/>
+                    color = {GlobalStyleConstants.PrimaryFontColor}
+                    onPress = {handleMenu}/>
                 :
                 null
             }
-            <Appbar.Content title = {props.heading}/>
-            {props.showPlusButton != undefined ? 
+
+            {props.backbutton != undefined ? 
                 <Appbar.Action 
-                    icon = 'plus'
-                    onPress = {props.onPressPlusButton} />
+                icon = 'keyboard-backspace'
+                color = {GlobalStyleConstants.PrimaryFontColor}
+                onPress = {handleBackbutton}/>
+            :
+            null
+            }
+            <Appbar.Content title = {props.heading} color = {GlobalStyleConstants.PrimaryFontColor}/>
+            {props.showProfile != undefined ? 
+               <Avatar.Image 
+                size = {35} 
+                source = {require('../assets/DefaultImage.jpg')}
+                style = {{marginRight : 10}}/>
                 :
                 null
             }
